@@ -17,10 +17,10 @@ def create_yt_object():
 
 def information():
     global author, title, duration, publish_date
-    author = str({youtube_video.author})
-    title = str({youtube_video.title})
-    duration = str({youtube_video.length})
-    publish_date = str({youtube_video.publish_date})
+    author = youtube_video.author
+    title = youtube_video.title
+    duration = str(youtube_video.length) + "s"
+    publish_date = str(youtube_video.publish_date)
 
     print(f"\nAuthor: {author}")
     print(f"Title: {title}")
@@ -65,20 +65,61 @@ def create_json():
         json.dump(data, f, indent=2, ensure_ascii=False)
 
 
-def audio_video_download():
+def download_video_audio():
     create_yt_object()
     global stream
     print("\nChoose the quality of your downloads:\n 1) 140p\n 2) 360p\n 3) 720p")
     quality_choice = input("Choice: ")
-    if quality_choice == '1':
-        stream = youtube_video.streams.get_by_itag(17)
-        download()
-    elif quality_choice == '2':
-        stream = youtube_video.streams.get_by_itag(18)
-        download()
-    elif quality_choice == '3':
-        stream = youtube_video.streams.get_by_itag(22)
-        download()
+
+    match quality_choice:
+        case '1':
+            stream = youtube_video.streams.get_by_itag(17)
+            download()
+        case '2':
+            stream = youtube_video.streams.get_by_itag(18)
+            download()
+        case '3':
+            stream = youtube_video.streams.get_by_itag(22)
+            download()
+        case _:
+            print("No match found")
+
+
+def download_video():
+    create_yt_object()
+    print("\nChoose the quality of your video file:\n 1) 140p\n 2) 360p\n 3) 720p")
+    quality_choice = input("Choice: ")
+
+
+def download_audio():
+    create_yt_object()
+    global stream
+    print("\nChoose the quality of your audio file:\n "
+          "1) Audio Byte-rate = 48kbps\n "
+          "2) Audio Byte-rate = 50kbps\n "
+          "3) Audio Byte-rate = 70kbps\n "
+          "4) Audio Byte-rate =  128kbps\n "
+          "5) Audio Byte-rate = 160kbps")
+    quality_choice = input("Choice: ")
+
+    match quality_choice:
+        case '1':
+            stream = youtube_video.streams.get_by_itag(139)
+            download()
+        case '2':
+            stream = youtube_video.streams.get_by_itag(249)
+            download()
+        case '3':
+            stream = youtube_video.streams.get_by_itag(250)
+            download()
+        case '4':
+            stream = youtube_video.streams.get_by_itag(140)
+            download()
+        case '5':
+            stream = youtube_video.streams.get_by_itag(251)
+            download()
+        case _:
+            print("No match found")
 
 
 def main():
@@ -92,9 +133,15 @@ def main():
           "4) Help \n"
           "5) About The Creator\n")
     choice = input("Your choice: ")
-
     if choice == '1':
-        audio_video_download()
+        download_video_audio()
+    elif choice == '2':
+        download_video()
+    elif choice == '3':
+        download_audio()
+    else:
+        print("No match found")
+        print("The application will close")
 
 
 if __name__ == '__main__':
