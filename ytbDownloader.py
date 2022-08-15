@@ -2,6 +2,7 @@ import os
 import sys
 import pytube.request
 from pytube import YouTube
+import json
 
 pytube.request.default_range_size = 1048576
 
@@ -15,10 +16,17 @@ def create_yt_object():
 
 
 def information():
-    print(f"\nAuthor: {youtube_video.author}")
-    print(f"Title: {youtube_video.title}")
-    print(f"Duration: {youtube_video.length}s")
-    print(f"Publish Date: {youtube_video.publish_date}\n")
+    global author, title, duration, publish_date
+    author = str({youtube_video.author})
+    title = str({youtube_video.title})
+    duration = str({youtube_video.length})
+    publish_date = str({youtube_video.publish_date})
+
+    print(f"\nAuthor: {author}")
+    print(f"Title: {title}")
+    print(f"Duration: {duration}s")
+    print(f"Publish Date: {publish_date}\n")
+    create_json()
 
 
 def download_progress(stream, chunk, bytes_remaining):
@@ -43,6 +51,18 @@ def download():
     print(f"Download complete.")
     print("\nThanks for using the app")
     os.startfile(f'{path}/{directory_name}')
+
+
+# function to add information about downloaded files into JSON
+def create_json():
+    sample_dict = {"author": author, "title": title, "duration": duration,
+                   "publish_date": publish_date}
+    with open("download_list.json", 'r+',  encoding='utf-8') as f:
+        data = json.load(f)
+        data["download"].append(sample_dict)
+        f.seek(0)
+        # ensure_ascii=False to encode Unicode as-is into JSON
+        json.dump(data, f, indent=2, ensure_ascii=False)
 
 
 def audio_video_download():
